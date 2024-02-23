@@ -50,11 +50,14 @@ dependencies {
     implementation "org.springframework.boot:spring-boot-starter-amqp"
 
     implementation "commons-io:commons-io:2.15.1"
-    implementation "org.apache.httpcomponents:httpclient:4.5.14"
+    implementation 'org.apache.httpcomponents.client5:httpclient5:5.3.1'
 
     implementation "edu.kit.datamanager:service-base:1.2.0"
     //driver for h2
     implementation "com.h2database:h2:2.2.224"
+
+    runtimeOnly 'com.github.java-json-tools:json-patch:1.13'
+    runtimeOnly "org.apache.commons:commons-exec:1.4.0"
 
     testImplementation "junit:junit"
 }
@@ -65,9 +68,13 @@ if (project.hasProperty('deploy')) {
 }
 
 bootJar {
-    baseName = 'generic-message-consumer'
-    classifier = 'boot'
+    println 'Create bootable jar...'
+    archiveFileName = "${archiveBaseName.get()}.${archiveExtension.get()}"
     duplicatesStrategy = DuplicatesStrategy.EXCLUDE
+    manifest {
+        attributes 'Main-Class': 'org.springframework.boot.loader.launch.PropertiesLauncher'
+    }
+    launchScript()
 }
 
 jar {
