@@ -53,13 +53,13 @@ public class MessageHandlerUtils{
     LOGGER.trace("Performing HTTP GET to {}.", destinationUri);
     ResponseEntity<ContentInformation> response = restTemplate.exchange(destinationUri, HttpMethod.GET, requestEntity, ContentInformation.class);
     LOGGER.trace("Content information access returned with response {}.", response);
-    if(response != null && response.getStatusCodeValue() == 200 && response.getBody() != null){
+    if(response != null && response.getStatusCode().value() == 200 && response.getBody() != null){
       String uploader = response.getBody().getUploader();
       LOGGER.trace("Content information found, comparing uploader {} with provided principal {}.", uploader, principal);
       return principal.equals(uploader);
     }
 
-    LOGGER.trace("No content information or error state ({}) returned. Returning 'false'.", response.getStatusCodeValue());
+    LOGGER.trace("No content information or error state ({}) returned. Returning 'false'.", response.getStatusCode().value());
     //no content found
     return false;
   }
